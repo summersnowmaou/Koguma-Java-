@@ -1,2 +1,2 @@
 # Koguma-Java-
-Study Java from Westos
+Learning Java from WestOS
