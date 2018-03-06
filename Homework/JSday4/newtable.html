@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Table</title>
+    <script type="text/javascript">
+        function checkit(obj) {
+            var len = document.getElementsByTagName("tr").length;
+            for (var i = 0; i < len; i++) {
+                var temp = document.getElementsByTagName("tr")[i];
+                if (obj == temp) {
+                    temp.style.background="#ccc";
+                }else {
+                    temp.style.background="";
+                }
+            }
+
+        }
+    </script>
+</head>
+<body>
+    <table width="50%" border="1" cellpadding="2" cellspacing="0" align="center">
+        <tr onclick="checkit(this);">
+            <th>Header1</th>
+            <th>Header2</th>
+        </tr>
+        <tr onclick="checkit(this);">
+            <td>row1,cell1</td>
+            <td>row1,cell2</td>
+        </tr>
+        <tr onclick="checkit(this);">
+            <td>row2,cell1</td>
+            <td>row2,cell2</td>
+        </tr>
+    </table>
+</body>
+</html>
