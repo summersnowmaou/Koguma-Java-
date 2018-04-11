@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Select</title>
+
+	<script type="text/javascript">
+		var city = [
+		["西安","安康","宝鸡","汉中","商洛","铜川","渭南","咸阳","延安","榆林"],
+		["成都","阿坝州","巴中","达州","德阳"],
+		["太原","长治","大同","晋城","晋中"],
+		["济南","滨州","东营","德州","菏泽"]
+		];
+
+		function getCity() {
+			var nProvince = document.form1.province;
+			var nCity = document.form1.city;
+			var provinceCity = city[nProvince.selectedIndex - 1];
+
+			nCity.length = 1;
+			for (var i = 0; i < provinceCity.length; i++) {
+				nCity[i+1] = new Option(provinceCity[i],provinceCity[i]);
+			}
+		}
+	</script>
+</head>
+<body>
+	<form method="post" action="" name="form1">
+	地区查找：
+	<select name="province" onchange="getCity()">
+		<option value="0">请选择省份</option>
+		<option value="陕西">陕西</option>
+		<option value="四川">四川</option>
+		<option value="山西">山西</option>
+		<option value="山东">山东</option>
+	</select>
+	<select name="city">
+		<option value="0">选择城市</option>
+	</select>
+	</form>
+</body>
+</html>
