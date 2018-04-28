@@ -19,7 +19,9 @@ public interface TodoService {
     Todo saveTodo(Todo todo);
     Todo saveTodo(String title,Integer todoClassid);
 
-    Boolean updateTodo(Todo todo);
+    Boolean addTodoClass(TodoClass todoclass);
+    Boolean addTodo(Todo todo);
+
     Boolean updateTodo(Integer todoid);
 
 }

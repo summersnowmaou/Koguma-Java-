@@ -11,8 +11,8 @@ public interface TodoDAO {
 
 
     //插入操作
-    Integer saveTodoClass(TodoClass todoClass);
-    Integer saveTodo(Todo todo);
+    Integer addTodoClass(TodoClass todoClass);
+    Integer addTodo(Todo todo);
 
     //更新操作
     Integer updateTodoState(Integer id);

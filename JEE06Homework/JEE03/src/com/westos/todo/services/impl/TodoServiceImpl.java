@@ -58,8 +58,31 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public Boolean updateTodo(Todo todo) {
-        return null;
+    public Boolean addTodoClass(TodoClass todoclass) {
+        SqlSession sqlSession = MybatisUtil.getInstance().getSqlSessionFactory().openSession();
+        TodoDAO dao = sqlSession.getMapper(TodoDAO.class);
+        int result = 0;
+        try {
+            result= dao.addTodoClass(todoclass);
+            sqlSession.commit();
+            return result>0;
+        }finally {
+            sqlSession.close();
+        }
+    }
+
+    @Override
+    public Boolean addTodo(Todo todo) {
+        SqlSession sqlSession = MybatisUtil.getInstance().getSqlSessionFactory().openSession();
+        TodoDAO dao = sqlSession.getMapper(TodoDAO.class);
+        int result = 0;
+        try {
+            result= dao.addTodo(todo);
+            sqlSession.commit();
+            return result>0;
+        }finally {
+            sqlSession.close();
+        }
     }
 
     @Override

@@ -20,4 +20,21 @@
             </if>
         </where>
     </select>
+
+    <insert id="saveTodoClass" parameterType="com.westos.todo.entity.TodoClass">
+    insert into todoclass(id,name) values(#{id},#{name})
+    </insert>
+
+    <insert id="saveTodo" parameterType="com.westos.todo.entity.Todo">
+    insert into todo(id,title,todoclassid,state,create_dt)
+     	values(#{id},#{title},#{todoclassid},#{state},#{create_dt})
+    </insert>
+
+    <update id="updateTodoState" parameterType="int">
+		update todo set state=1
+        <where>
+            id=#{id}
+        </where>
+	</update>
+
 </mapper>
