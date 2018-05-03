@@ -1,170 +1,211 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>TodoList</title>
-    <meta http-equiv="X-UA-Compatible" content="IE-edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <link rel="stylesheet" type="text/css" href="./bootstrap-3.3.7-dist/css/bootstrap.min.css" />
-    <script  src="./js/vue.js"></script>
-    <script src="./js/axios.min.js"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<title>Todolist</title>
+	<meta http-equiv="X-UA-Compatible" content="IE-edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
+	<script type="text/javascript" src="bootstrap-3.3.7-dist/js/jquery.min.js"></script>
+	<script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+	<script type="text/javascript" src="js/vue.js"></script>
+	<script src="js/axios.min.js"></script>
+	<style type="text/css">
+		.top{
+			margin-top: 10px;
+			margin-bottom: 10px
+		}
+	</style>
 </head>
 <body>
-<div class="container" id="app">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="page-header">
-                <h1>JAVA练习的TODOLIST</h1>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <form class="form form-inline">
-                <div class="form-group form-group-sm">
-                    <input type="text" class="form-control" v-model="todoclassname" placeholder="请输入分类名称" />
-                    <button type="button" class="btn btn-primary" v-on:click="addtodoclass('0')">添加同级</button>
-                    <button type="button" class="btn btn-info" v-on:click="addtodoclass('1')">添加下级</button>
-                </div>
-            </form>
-            <ul class="nav nav-pills nav-stacked">
-                <li v-for="item in todoclasses" v-on:click="changetodoclass(item)">
-                    <a href="#"> {{item.todoclass.name}}</a></li>
-            </ul>
-        </div>
-        <div class="col-md-8">
-            <form class="form form-inline">
-                <div class="form-group">
-                    <input type="text" class="form-control" v-model="todotitle" placeholder="请输入待办事项名称" />
-                    <button type="button" class="btn btn-primary" v-on:click="addtodo()">添加</button>
-
-                </div>
-            </form>
-            <div class="list-group">
-                <a href="#" class="list-group-item" v-for="(item,index) in currenttodoclass.todos">
-                    <span class="badge label-success" v-if="item.state==1">已完成</span>
-                    <span class="badge label-success" v-if="item.state==0">未完成</span>
-
-                    {{index+1}}.{{item.title}}【{{item.create_dt}}】
-                </a>
-            </div>
-
-        </div>
-    </div>
-</div>
+	<div class="container" id="app">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="page-header">
+					TODOLIST
+				</div>
+			</div>
+		
+			<div class="col-md-4">
+				<form class="form form-inline">
+					<div class="form-group form-group-sm">
+						<input type="text" class="form-control" v-model="todoclassname" placeholder="请输入分类名称">
+						<button type="button" class="btn btn-primary" v-on:click="addtodoclass('0')">添加同级</button>
+						<button type="button" class="btn btn-info" v-on:click="addtodoclass('1')">添加下级</button>
+					</div>
+				</form>
+				<ul class="nav nav-pills nav-stacked">
+					<li v-for="(item,index) in todoclasses" @click="changetodoclass(item,index)">
+						<a href="#">{{item.todoclass.name}}</a>
+					</li>
+				</ul>
+			</div>
+			<div class="col-md-8">
+				<form class="form form-inline">
+					<div class="form-group">
+						<input type="text" class="form-control" v-model="todotitle" placeholder="请输入待办事项名称">
+						<button type="button" class="btn btn-primary" @click="addtodo()" >添加</button>
+					</div>
+				</form>
+				<div class="list-group">
+					<a href="#" class="list-group-item" v-for="(item,index) in currenttodoclass.todos">
+						<span class="badge label-success" @click="removetodo(item,index)">删除</span>
+						<span class="badge label-success" v-if="item.state==1">已完成</span>
+						<span class="badge label-success" v-if="item.state==0" @click="updatetodostate(item)">未完成</span>
+						{{index+1}},{{item.title}},【{{item.create_dt}}】
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
 <script type="text/javascript">
-    var vue=new Vue({
-        el:"#app",
-        data:{
-            msg:'helloworld',
-            todoclassname:'',
-            todotitle:'',
-            currenttodoclass:{
-                todoclass:{
-                    id:1,
-                    name:"学习"
-                },
-                todos:[
 
-                ]
-            },
-            "todoclasses":[
-                {
-                    "todoclass":{
-                        "id":1,
-                        "name":"学习"
-                    },
-                    "todos":[
-                        {
-                            "create_dt":"2018-04-21 11:37:08",
-                            "id":1,
-                            "state":0,
-                            "title":"学习JAVA"
-                        },
-                        {
-                            "create_dt":"2018-04-21 11:37:08",
-                            "id":2,
-                            "state":1,
-                            "title":"学习HTML"
-                        }
-                    ],
-                    todoclassvolist:[]
-                },
-                {
-                    "todoclass":{
-                        "id":2,
-                        "name":"生活"
-                    },
-                    "todos":[
-                        {
-                            "create_dt":"2018-04-21 11:37:08",
-                            "id":3,
-                            "state":0,
-                            "title":"看电影"
-                        },
-                        {
-                            "create_dt":"2018-04-21 11:37:08",
-                            "id":4,
-                            "state":1,
-                            "title":"踢足球"
-                        }
-                    ],
-                    todoclassvolist:[]
-                }
-            ]
-        },
-        methods:{
-            changetodoclass:function(item){
-                this.currenttodoclass=item;
-            },
-            addtodoclass:function(level){
-                var todoclass={};
-                todoclass.todoclass={};
-                todoclass.todos=new Array();
+	var vue=new Vue({
+		el:'#app',
+		data:{
+			currenttodoclass:{},
+			todoclassname:'',
+			todotitle:'',
+			todoclasses:[],
+			currenttodoclassindex:0
+		},
+		methods:{
+			
+			init:function(){
+				axios.get('/20180421todo/todo/selecttodo.wst').then(function(result){
+					//console.log(result);
+					while(vue.todoclasses.length>0){
+						vue.todoclasses.pop();
+					}
+					for(var i=0;i<result.data.todoclasses.length;i++){
+						vue.todoclasses.push(result.data.todoclasses[i]);
+					}
+					
+					vue.currenttodoclass=vue.todoclasses[vue.currenttodoclassindex];
+					
+				//	vue.currenttodoclass=vue.todoclasses[0];
+				}).catch(function(err){
+					console.error(err);
+					alert('网络异常');
+				})
+			},
+			
+			changetodoclass:function(item,index){
+				this.currenttodoclass=item;
+				this.currenttodoclassindex=index;
+			//	alert(index);
+			//	alert(this.currenttodoclass.todoclass.id);
+			},
+			
+			addtodoclass:function(level){
+				var param=''; //利用键值传参
+				param='todoClassName='+this.todoclassname;
+			//	alert(param);
+				axios.post('/20180421todo/todo/savetodoclass.wst',param).then(function(result){
+					if(result.status==200){
+						console.log(result);
+						alert('保存成功');
+						vue.init();
+						vue.todoclassname='';
+					//	alert(result);
+					}
+				}).catch(function(err){
+					console.error(err);
+					alert('服务器异常');
+				})
+				
+/*				var todoclass={};
+				todoclass.todoclass={};
+				todoclass.todos=[];
+				todoclass.todoclass.name=this.todoclassname;
+				todoclass.todoclass.id=parseInt(Math.random()*10);				
+				if(level=='0'){
+					//添加同级
+					this.todoclasses.push(todoclass);
+				}else{
+					//添加下级
+					this.currenttodoclass.todoclassvolist.push(todoclass);
+				}
+				vue.todoclassname='';*/
+			},
+			
+			addtodo:function(){
+				var param='';
+				param='todoclassid='+this.currenttodoclass.todoclass.id+'&title='+this.todotitle;
+				axios.post('/20180421todo/todo/savetodo.wst',param).then(function(result){
+					if(result.status==200){
+						alert('保存成功');
+						vue.init();
+						vue.todotitle='';
+					}
+				}).catch(function(err){
+					console.error(err);
+					alert('服务器异常');
+				})
+				
+/*				if(this.todotitle!=''){
+					var todo={};
+					todo.id=parseInt(Math.random()*10); //后台设置主键自增
+					//alert(todo.id);
+					todo.state=0; //后台设置
+					todo.todoclassid=this.currenttodoclass.todoclass.id;//前端传过去
+					//alert(todo.todoclassid);
+					todo.title=this.todotitle; //前端传过去
+					todo.create_dt='2018-04-21'; //后台设置
+					this.currenttodoclass.todos.push(todo); //写到axios
+					vue.todotitle=''; //写到axios
+				}else{
+					alert('待办事项不能为空');
+				}*/
+				
+			},
+			
+			updatetodostate:function(item,index){
+				//alert('测试函数是否管用'); 测试成功
+				if(confirm('该事件已完成了吗？')){
+					//alert(1111); 就在这里写代码了
+					var param='';
+					//alert(item.id);
+					param="id="+item.id;
+					axios.post('/20180421todo/todo/updatetodostate.wst',param).then(function(result){
+						if(result.status==200){
+							alert('改变状态成功');
+							item.state=1;
+						}
+					}).catch(function(err){
+						console.error(err);
+						alert('服务器错误');
+					})
+				}
+			},
+			
+			removetodo:function(item){
+				//alert('要删除啦');
+				if(confirm('您确定删除该事件吗？')){
+					var param='';
+					param='id='+item.id;
+					axios.post('/20180421todo/todo/removetodo.wst',param).then(function(result){
+						if(result.status==200){
+							alert('删除成功');
+							vue.init();
+						}
+					}).catch(function(result){
+						console.error(err);
+						alert('服务器错误');
+					})
+				}
+				
+			}
+		},
+		mounted:function(){
+			console.log('inited');
+			//this.currenttodoclass=this.todoclasses[0];
+			this.init();
+		}
+	});
 
-                todoclass.todoclass.name=this.todoclassname;
-                todoclass.todoclass.id=parseInt(Math.random()*10);
 
-                if(level=='0'){
-                    //添加同级
-                    this.todoclasses.push(todoclass);
-
-                }else{
-                    //添加下级
-                    this.currenttodoclass.todoclassvolist.push(todoclass);
-                }
-            },
-            addtodo:function(){
-                var todo={};
-                todo.id=parseInt(Math.random()*10);
-                todo.state=0;
-                todo.title=this.todotitle;
-                todo.create_dt='2018-04-21';
-                this.currenttodoclass.todos.push(todo);
-            },
-            init:function(){
-                axios.get('/todo/listtodoclasses.wst').then(function(result){
-                    console.log(result);
-                    while(vue.todoclasses.length>0){
-                        vue.todoclasses.pop();
-                    }
-                    for(var i=0;i<result.data.todoclasses.length;i++){
-                        vue.todoclasses.push(result.data.todoclasses[i]);
-                    }
-
-                    vue.currenttodoclass=vue.todoclasses[0];
-                }).catch(function(err){
-                    console.error(err);
-                    alert('网络异常');
-                });
-            }
-        },
-        mounted:function(){
-            console.log('inited');
-            this.init();
-
-        }
-    });
 </script>
