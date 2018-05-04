@@ -1,4 +1,4 @@
-package com.westos.file.reflect.resultset.resultsetimpl;
+﻿package com.westos.file.reflect.resultset.resultsetimpl;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import com.westos.file.reflect.resultset.ResultSetToBean;
@@ -31,14 +31,7 @@ public class ResultSetToBeanImpl implements ResultSetToBean {
             rs = ps.executeQuery();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                ps.close();
-                conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        } 
         return rs;
     }
 
