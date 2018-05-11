@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>TodoList</title>
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="./bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+    <script  src="./js/vue.js"></script>
+    <script src="./js/axios.min.js"></script>
+</head>
+<body>
+<div class="container" id="app">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h1>JAVA练习的TODOLIST</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <form class="form form-inline">
+                <div class="form-group form-group-sm">
+                    <input type="text" class="form-control" v-model="todoclassname" placeholder="请输入分类名称" />
+                    <button type="button" class="btn btn-primary" v-on:click="addtodoclass('0')">添加同级</button>
+                    <button type="button" class="btn btn-info" v-on:click="addtodoclass('1')">添加下级</button>
+                </div>
+            </form>
+            <ul class="nav nav-pills nav-stacked">
+                <li v-for="item in todoclasses" v-on:click="changetodoclass(item)">
+                    <a href="#"> {{item.todoclass.name}}</a></li>
+            </ul>
+        </div>
+        <div class="col-md-8">
+            <form class="form form-inline">
+                <div class="form-group">
+                    <input type="text" class="form-control" v-model="todotitle" placeholder="请输入待办事项名称" />
+                    <button type="button" class="btn btn-primary" v-on:click="addtodo()">添加</button>
+
+                </div>
+            </form>
+            <div class="list-group">
+                <a href="#" class="list-group-item" v-for="(item,index) in currenttodoclass.todos">
+                    <span class="badge label-success" v-if="item.state==1">已完成</span>
+                    <span class="badge label-success" v-if="item.state==0">未完成</span>
+
+                    {{index+1}}.{{item.title}}【{{item.create_dt}}】
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    var vue=new Vue({
+        el:"#app",
+        data:{
+            msg:'helloworld',
+            todoclassname:'',
+            todotitle:'',
+            currenttodoclass:{
+                todoclass:{
+                    id:1,
+                    name:"学习"
+                },
+                todos:[
+
+                ]
+            },
+            "todoclasses":[
+                {
+                    "todoclass":{
+                        "id":1,
+                        "name":"学习"
+                    },
+                    "todos":[
+                        {
+                            "create_dt":"2018-04-21 11:37:08",
+                            "id":1,
+                            "state":0,
+                            "title":"学习JAVA"
+                        },
+                        {
+                            "create_dt":"2018-04-21 11:37:08",
+                            "id":2,
+                            "state":1,
+                            "title":"学习HTML"
+                        }
+                    ],
+                    todoclassvolist:[]
+                },
+                {
+                    "todoclass":{
+                        "id":2,
+                        "name":"生活"
+                    },
+                    "todos":[
+                        {
+                            "create_dt":"2018-04-21 11:37:08",
+                            "id":3,
+                            "state":0,
+                            "title":"看电影"
+                        },
+                        {
+                            "create_dt":"2018-04-21 11:37:08",
+                            "id":4,
+                            "state":1,
+                            "title":"踢足球"
+                        }
+                    ],
+                    todoclassvolist:[]
+                }
+            ]
+        },
+        methods:{
+            changetodoclass:function(item){
+                this.currenttodoclass=item;
+            },
+            addtodoclass:function(level){
+                var todoclass={};
+                todoclass.todoclass={};
+                todoclass.todos=new Array();
+
+                todoclass.todoclass.name=this.todoclassname;
+                todoclass.todoclass.id=parseInt(Math.random()*10);
+
+                if(level=='0'){
+                    //添加同级
+                    this.todoclasses.push(todoclass);
+
+                }else{
+                    //添加下级
+                    this.currenttodoclass.todoclassvolist.push(todoclass);
+                }
+            },
+            addtodo:function(){
+                var todo={};
+                todo.id=parseInt(Math.random()*10);
+                todo.state=0;
+                todo.title=this.todotitle;
+                todo.create_dt='2018-04-21';
+                this.currenttodoclass.todos.push(todo);
+            },
+            init:function(){
+                axios.get('/todo/listtodoclasses.wst').then(function(result){
+                    console.log(result);
+                    while(vue.todoclasses.length>0){
+                        vue.todoclasses.pop();
+                    }
+                    for(var i=0;i<result.data.todoclasses.length;i++){
+                        vue.todoclasses.push(result.data.todoclasses[i]);
+                    }
+
+                    vue.currenttodoclass=vue.todoclasses[0];
+                }).catch(function(err){
+                    console.error(err);
+                    alert('网络异常');
+                });
+            }
+        },
+        mounted:function(){
+            console.log('inited');
+            this.init();
+
+        }
+    });
+</script>
