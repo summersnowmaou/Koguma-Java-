@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>教学资源下载</title>
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="./bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+    <script  src="./js/vue.js"></script>
+    <script src="./js/axios.min.js"></script>
+</head>
+<body>
+<div class="container" id="app" v-show="canshow">
+    <h1>{{msg}}</h1>
+<h2>{{user}}</h2>
+    <a href="/my/loginout.do">注销</a>
+</div>
+</body>
+</html>
+<script>
+    var vue=new Vue({
+        el:'#app',
+        data:{
+            msg:'用户主页',
+            canshow:false,
+            user:{
+                username:'',
+                password:''
+            }
+        },
+        methods:{
+            init:function(){
+                axios.get('/my/main.do').then(function(result){
+                    console.log(result);
+                    if(result.data.status=="0"){
+                        console.log(result.data.data);
+                        vue.user=result.data.data;
+                        vue.canshow=true;
+                        console.log(this.user);
+                    }else if(result.data.status=="2"){
+                        alert("当前用户未登录");
+                        document.location.href="login.html";
+                    }else{
+                        alert(result.data.msg);
+                    }
+                }).catch(function(err){
+                    alert('您的网络不给力呀~');
+                })
+            }
+        },
+        mounted:function(){
+            console.log('inited..');
+            this.init();
+        }
+    });
+</script>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>教学资源下载</title>
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <link rel="stylesheet" type="text/css" href="./bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+    <script src="/my/ctx.do"></script>
+    <script  src="./js/vue.js"></script>
+    <script src="./js/axios.min.js"></script>
+
+</head>
+<body>
+<div class="container" id="app">
+    <h1>{{msg}}</h1>
+    <input type="text" v-model="user.username" placeholder="请输入用户名"/>
+    <input type="password" v-model="user.password" placeholder="请输入密码"/>
+    <button type="button" v-on:click="login()">登录</button>
+</div>
+</body>
+</html>
+<script>
+    var vue=new Vue({
+        el:'#app',
+        data:{
+            msg:'用户登录',
+            user:{
+                username:'admin',
+                password:''
+            }
+        },
+        methods:{
+            login:function(){
+                axios.post(_APPROOT+'/my/login.do',this.user).then(function(result){
+                    console.log(result);
+                    if(result.data.status=="0"){
+
+                        document.location.href='main.html';
+                    }else{
+                        alert(result.data.msg);
+                    }
+                }).catch(function(err){
+                    alert('您的网络不给力呀~');
+                })
+            }
+        },
+        mounted:function(){
+            console.log('inited..');
+        }
+    });
+</script>
