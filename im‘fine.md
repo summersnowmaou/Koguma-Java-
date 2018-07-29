@@ -1,0 +1,1 @@
+"how are you?" " ̶s̶a̶d̶,̶ ̶b̶r̶o̶k̶e̶n̶,̶ ̶d̶e̶f̶e̶a̶t̶e̶d̶,̶ ̶c̶r̶u̶s̶h̶e̶d̶,̶ ̶l̶o̶n̶e̶l̶y̶,̶ ̶f̶a̶l̶l̶i̶n̶g̶ ̶a̶p̶a̶r̶t̶ i'm fine。
